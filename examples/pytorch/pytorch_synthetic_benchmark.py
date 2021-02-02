@@ -16,7 +16,7 @@ parser.add_argument('--fp16-allreduce', action='store_true', default=False,
 
 parser.add_argument('--model', type=str, default='resnet50',
                     help='model to benchmark')
-parser.add_argument('--batch-size', type=int, default=32,
+parser.add_argument('--batch-size', type=int, default=64,
                     help='input batch size')
 
 parser.add_argument('--num-warmup-batches', type=int, default=10,
