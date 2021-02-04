@@ -1,9 +1,5 @@
+import os
 import argparse
-import torch.backends.cudnn as cudnn
-import torch.nn.functional as F
-import torch.optim as optim
-import torch.utils.data.distributed
-from torchvision import models
 import horovod.torch as hvd
 import timeit
 import numpy as np
@@ -33,13 +29,20 @@ parser.add_argument('--use-adasum', action='store_true', default=False,
                     help='use adasum algorithm to do reduction')
 
 args = parser.parse_args()
-args.cuda = not args.no_cuda and torch.cuda.is_available()
+os.environ['CUDA_VISIBLE_DEVICES'] = os.environ.get('MV2_COMM_WORLD_LOCAL_RANK','')
 
 hvd.init()
 
+import torch.backends.cudnn as cudnn
+import torch.nn.functional as F
+import torch.optim as optim
+import torch.utils.data.distributed
+from torchvision import models
+
+args.cuda = not args.no_cuda and torch.cuda.is_available()
 if args.cuda:
-    # Horovod: pin GPU to local rank.
-    torch.cuda.set_device(hvd.local_rank())
+    # Horovod: pin GPU to local rank
+    torch.cuda.set_device(0)
 
 cudnn.benchmark = True
 
